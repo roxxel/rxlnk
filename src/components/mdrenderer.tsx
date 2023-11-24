@@ -7,6 +7,7 @@ import rehypePrismAll from "rehype-prism-plus";
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import Head from "next/head";
+import hljs from "highlight.js";
 export default function MDRenderer({
   markdown,
   className,
@@ -14,7 +15,10 @@ export default function MDRenderer({
   markdown: string;
   className: string;
 }) {
-  
+  if (markdown.startsWith("CODE")) {
+    const lang = markdown.split("\n")[0].replaceAll("CODE:", "").trim()
+    markdown = '```' + lang + '\n' + markdown.split("\n").slice(1).join('\n') + "\n```"
+  }
   try {
     return (
       <>

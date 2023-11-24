@@ -3,6 +3,7 @@ import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import { rxdb } from "@/lib/mongo";
 import { ObjectId } from "bson";
+import hljs from "highlight.js";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { FC } from "react";
@@ -30,10 +31,11 @@ const PastePage: FC<IProps> = async ({ params: { id }, searchParams }) => {
       </div>
     );
   }
+
   return (
     <div className="min-h-screen text-[#f7f7f7] bg-black">
       <Navbar />
-        <MDRenderer className="px-8 py-8 min-h-screen md:px-16 lg:px-32" markdown={paste.paste}></MDRenderer>
+          <MDRenderer className="px-8 py-8 min-h-screen md:px-16 lg:px-32" markdown={paste.paste}></MDRenderer>
     </div>
   );
 };

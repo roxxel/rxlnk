@@ -4,7 +4,7 @@ import { ZodError, z } from "zod";
 
 
 const PasteCreateSchema = z.object({
-    paste: z.string().max(8000, "Paste length can't be more than 8000"),
+    paste: z.string().min(1).max(8000, "Paste length can't be more than 8000"),
     isPrivate: z.boolean(),
 })
 
