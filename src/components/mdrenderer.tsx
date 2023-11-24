@@ -8,17 +8,51 @@ import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import Head from "next/head";
 import hljs from "highlight.js";
+import { useLayoutEffect } from "react";
+import exportAsImage from "@/lib/utils";
 export default function MDRenderer({
   markdown,
   className,
+  displayScreenshotButton
 }: {
   markdown: string;
   className: string;
+  displayScreenshotButton?: boolean
 }) {
   if (markdown.startsWith("CODE")) {
     const lang = markdown.split("\n")[0].replaceAll("CODE:", "").trim()
     markdown = '```' + lang + '\n' + markdown.split("\n").slice(1).join('\n') + "\n```"
   }
+
+  useLayoutEffect(() => {
+    // If render happened on server - do nothing return
+    if (typeof window === 'undefined') return
+    let btns: HTMLButtonElement[] = []
+    const screenshot = async (e: MouseEvent) => {
+      await exportAsImage(document.querySelector(`pre[data-id='${(e.target as HTMLElement).dataset['preid']}']`)!)
+    }
+    if (displayScreenshotButton) {
+      const pres = [...Array.from(document.querySelectorAll('pre'))]
+      pres.forEach((x,i)=> {
+        //@ts-ignore
+        x.style = "position: relative"
+        x.dataset['id'] = i.toString()
+        x.classList.add('pre-custom')
+        const button = document.createElement('button')
+        button.innerText = "Save as image"
+        button.classList.add('pre-btn')
+        button.dataset['preid'] = i.toString()
+        //@ts-ignore
+        button.style = "position:absolute; top: 12px; right: 12px;"
+        x.appendChild(button)
+        btns.push(button)
+        button.addEventListener('click', screenshot)
+      })
+    }
+    return () => {
+      btns.forEach(x=>{ x.removeEventListener('click', screenshot); document.removeChild(x) })
+    }
+  }, [markdown])
   try {
     return (
       <>

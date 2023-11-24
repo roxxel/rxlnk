@@ -70,6 +70,16 @@ body {
   }
 }
 
+.pre-btn {
+  display: none;
+}
+.pre-custom:hover .pre-btn {
+  display:block;
+  border-width: 1px;
+  border-color: hsl(var(--primary));
+  padding: 6px 12px;
+  border-radius: 12px;
+}
 
 /*!
   Theme: Gruvbox dark, hard
