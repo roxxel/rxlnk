@@ -67,6 +67,10 @@ export default function Home() {
                 </>
               )}
             </Button>
+            <h1 className="text-white font-bold my-6 text-center text-[32px]">OR</h1>
+            <Link href='/paste' className="min-w-full">
+              <Button variant='secondary' className="min-w-full">Create new paste</Button>
+            </Link>
           </div>
         </div>
       </div>
