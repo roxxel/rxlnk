@@ -16,6 +16,13 @@ body {
 p:has(img) {
   display:flex;
 }
+.markdown-body ul,ol {
+  list-style:decimal;
+}
+.markdown-body li::marker {
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

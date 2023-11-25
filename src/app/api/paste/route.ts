@@ -15,7 +15,11 @@ export async function POST(request: NextRequest) {
         const schema = PasteCreateSchema.parse(body)
         const db = await rxdb()
         const pastes = await db.collection('pastes')
-        const doc = await pastes.insertOne({paste: schema.paste, isPrivate: schema.isPrivate})
+        const doc = await pastes.insertOne({
+            paste: schema.paste, 
+            isPrivate: schema.isPrivate, 
+            createdAt: new Date().toISOString()
+        })
 
         return NextResponse.json({id: doc.insertedId})
 

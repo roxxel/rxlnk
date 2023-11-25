@@ -56,7 +56,14 @@ const PastePage: FC<IProps> = async ({ params: { id }, searchParams }) => {
   return (
     <div className="min-h-screen text-[#f7f7f7] bg-black">
       <Navbar />
-          <MDRenderer displayScreenshotButton={true} className="px-8 py-8 min-h-screen md:px-32 lg:px-80" markdown={paste.paste}></MDRenderer>
+      <div className="flex mt-4 px-8 md:px-32 lg:px-80 justify-between items-center">
+        {paste.createdAt ? 
+          <p className="text-gray-500 font-light">
+            Posted at: {new Date(paste.createdAt).toLocaleString()}
+          </p> : <div></div>}
+        <Link href={`/paste/${id}/raw`}><Button variant='link'  className="rounded-[4px]">View raw</Button></Link>
+      </div>
+      <MDRenderer displayScreenshotButton={true} className="px-8 py-8 min-h-screen md:px-32 lg:px-80" markdown={paste.paste}></MDRenderer>
     </div>
   );
 };

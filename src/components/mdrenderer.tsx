@@ -13,6 +13,8 @@ import hljs from "highlight.js";
 import { useLayoutEffect } from "react";
 import exportAsImage from "@/lib/utils";
 import ImageWithFallback from "./ui/imagewithfallback";
+import Link from "next/link";
+import { Button } from "./ui/button";
 export default function MDRenderer({
   markdown,
   className,
@@ -85,6 +87,14 @@ export default function MDRenderer({
               p(props) {
                 const { node, ...rest } = props;
                 return <p style={{ fontSize: "14px" }} {...rest} />;
+              },
+              a(props) {
+                const { node, href, ref, children, className, ...rest } = props;
+                return <Link className="" href={new URL(href!)} {...rest}>
+                  <div className="text-primary inline-block hover:underline underline-offset-4 font-bold">
+                    {children}
+                  </div>
+                </Link>
               },
               // img(props) {
               //   const { node, src, width, height, placeholder, ref, className, ...rest } =
