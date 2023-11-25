@@ -13,6 +13,9 @@ code {
 body {
   background-color: #000000;
 }
+p:has(img) {
+  display:flex;
+}
 @layer base {
   :root {
     --background: 0 0% 100%;

@@ -148,7 +148,7 @@ const NewPaste: FC<IProps> = (props) => {
         <div
           className={`${
             preview ? "w-0" : "w-1/2"
-          } bg-black transition-all overflow-auto pb-8 max-h-screen`}
+          } bg-black transition-all overflow-hidden pb-8 max-h-screen`}
         >
           <Textarea
             onKeyDown={onKeyDown}
@@ -172,11 +172,11 @@ export default async function Home() {
           />
         </div>
         <div className="w-[1px] min-h-screen overflow-hidden bg-white"></div>
-        <div className={preview ? 'w-full px-8 md:px-32 lg:px-80' : 'w-1/2' }>
+        <div className={(preview ? 'w-full px-8 md:px-32 lg:px-80' : 'w-1/2') + ' overflow-hidden pb-16'}>
           <MDRenderer
             key={1}
             markdown={paste}
-            className="px-4 overflow-auto pb-20 h-screen pt-8"
+            className="px-4 overflow-auto max-h-[80vh] pb-12 pt-8"
           />
         </div>
       </div>
