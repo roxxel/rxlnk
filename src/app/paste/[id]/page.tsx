@@ -56,7 +56,7 @@ const PastePage: FC<IProps> = async ({ params: { id }, searchParams }) => {
   return (
     <div className="min-h-screen text-[#f7f7f7] bg-black">
       <Navbar />
-          <MDRenderer displayScreenshotButton={true} className="px-8 py-8 min-h-screen md:px-16 lg:px-32" markdown={paste.paste}></MDRenderer>
+          <MDRenderer displayScreenshotButton={true} className="px-8 py-8 min-h-screen md:px-32 lg:px-80" markdown={paste.paste}></MDRenderer>
     </div>
   );
 };
