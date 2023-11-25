@@ -4,13 +4,34 @@ import { Button } from "@/components/ui/button";
 import { rxdb } from "@/lib/mongo";
 import { ObjectId } from "bson";
 import hljs from "highlight.js";
+import { Metadata, ResolvingMetadata } from "next";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { FC } from "react";
+import removeMarkdown from "markdown-to-text";
 
 interface IProps {
   params: { id: string };
   searchParams?: { raw: string | undefined };
+}
+export async function generateMetadata(
+  { params }: IProps,
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const db = await rxdb();
+  const pastes = await db.collection("pastes");
+  const paste = await pastes.findOne({ _id: new ObjectId(params.id) });
+  if (paste) {
+    const cleaned = removeMarkdown((paste.paste as string))
+    return {
+      title: 'Reactive Link Paste',
+      description: (cleaned.startsWith("CODE") ? cleaned.split("\n").slice(1).join('\n') : cleaned).substring(0, 150) + '...'
+    }
+  }
+  return {
+    title: 'Reactive Link',
+    description: 'Paste not found'
+  }
 }
 
 const PastePage: FC<IProps> = async ({ params: { id }, searchParams }) => {

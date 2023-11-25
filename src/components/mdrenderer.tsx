@@ -4,6 +4,7 @@ import rehypeCodeTitles from "rehype-code-titles";
 //@ts-ignore
 import rehypeFigure from "rehype-figure";
 import rehypePrismAll from "rehype-prism-plus";
+import rehypeVideo from 'rehype-video'
 import Markdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import Head from "next/head";
@@ -50,7 +51,7 @@ export default function MDRenderer({
       })
     }
     return () => {
-      btns.forEach(x=>{ x.removeEventListener('click', screenshot); document.removeChild(x) })
+      btns.forEach(x=>{ x.removeEventListener('click', screenshot); x.parentNode!.removeChild(x) })
     }
   }, [markdown])
   try {
@@ -69,7 +70,14 @@ export default function MDRenderer({
             `}
         </style>
         <div className={`markdown-body ${className}`}>
-          <Markdown rehypePlugins={[rehypeHighlight, remarkGfm]}>{markdown}</Markdown>
+          <Markdown 
+          components={{p(props) {
+            const {node, ...rest} = props
+            return <p style={{fontSize: '14px'}} {...rest} />
+          }}}
+          rehypePlugins={[rehypeHighlight, remarkGfm, [rehypeVideo, {details: false}]]}>
+            {markdown}
+          </Markdown>
         </div>
       </>
     );

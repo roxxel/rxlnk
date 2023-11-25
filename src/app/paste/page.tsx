@@ -171,7 +171,8 @@ export default async function Home() {
             id="message"
           />
         </div>
-        <div className={preview ? 'w-full' : 'w-1/2' }>
+        <div className="w-[1px] min-h-screen overflow-hidden bg-white"></div>
+        <div className={preview ? 'w-full px-8 md:px-32 lg:px-80' : 'w-1/2' }>
           <MDRenderer
             key={1}
             markdown={paste}
