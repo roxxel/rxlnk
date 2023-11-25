@@ -86,23 +86,23 @@ export default function MDRenderer({
                 const { node, ...rest } = props;
                 return <p style={{ fontSize: "14px" }} {...rest} />;
               },
-              img(props) {
-                const { node, src, width, height, placeholder, ref, className, ...rest } =
-                  props;
-                return (
-                  <div className="relative left-0 h-[300px] ">
-                    <ImageWithFallback
-                      fallbackSrc={"/noimage.svg"}
-                      fill={true}
-                      src={src || "/not-found"}
-                      alt=""
-                      style={{backgroundColor: 'rgb(30 41 59) !important'}}
-                      className={`${className || ''} min-w-screen`}
-                      {...rest}
-                    />
-                  </div>
-                );
-              },
+              // img(props) {
+              //   const { node, src, width, height, placeholder, ref, className, ...rest } =
+              //     props;
+              //   return (
+              //     <div className="relative left-0 h-[300px] ">
+              //       <ImageWithFallback
+              //         fallbackSrc={"/noimage.svg"}
+              //         fill={true}
+              //         src={src || "/not-found"}
+              //         alt=""
+              //         style={{backgroundColor: 'rgb(30 41 59) !important'}}
+              //         className={`${className || ''} min-w-screen`}
+              //         {...rest}
+              //       />
+              //     </div>
+              //   );
+              // },
             }}
             rehypePlugins={[
               rehypeHighlight,
