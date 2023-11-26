@@ -86,9 +86,9 @@ const PastePage: FC<IProps> = async ({ params: { id }, searchParams }) => {
           )}
         </div>
       </div>
-      <div className="px-8 md:px-32 lg:px-80">
+      {paste.oneTime && <div className="px-8 md:px-32 lg:px-80">
         <p className="text-destructive">This paste is already deleted. You would not have another chance to view it.<br/> Please save it in order to keep data</p>
-      </div>
+      </div>}
       <MDRenderer
         displayScreenshotButton={true}
         className="px-8 py-8 min-h-screen md:px-32 lg:px-80"
