@@ -6,6 +6,7 @@ import { ZodError, z } from "zod";
 const PasteCreateSchema = z.object({
     paste: z.string().min(1).max(8000, "Paste length can't be more than 8000"),
     isPrivate: z.boolean(),
+    oneTime: z.boolean()
 })
 
 
@@ -18,7 +19,8 @@ export async function POST(request: NextRequest) {
         const doc = await pastes.insertOne({
             paste: schema.paste, 
             isPrivate: schema.isPrivate, 
-            createdAt: new Date().toISOString()
+            createdAt: new Date().toISOString(),
+            oneTime: schema.oneTime
         })
 
         return NextResponse.json({id: doc.insertedId})

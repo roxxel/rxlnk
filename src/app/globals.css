@@ -80,6 +80,166 @@ p:has(img) {
   }
 }
 
+
+  .my-line-highlight span.token {
+    @apply bg-neutral-800;
+  }
+
+  .prose {
+    min-width: 0;
+    & code {
+      @apply text-secondary bg-neutral-900 px-1;
+
+
+      &:before, &:after {
+        content: none;
+        @apply text-primary;
+      }
+    }
+
+    & a {
+      @apply text-primary;
+      text-decoration: none;
+    }
+
+    & code[data-lexical-text] {
+      @apply font-mono;
+      font-size: inherit;
+      font-weight: inherit;
+      &:before, &:after {
+        content: none;
+      }
+    }
+
+    /* reset the prose borders */
+    & [data-lexical-decorator] > table {
+      table-layout: fixed;
+      & td {
+        vertical-align: middle;
+      }
+      & > thead, & > tfoot, & > tbody > tr {
+        border: 0;
+      }
+
+      & [data-tool-cell] {
+        padding: 1px;
+        border: 0;
+        line-height: 1rem;
+        vertical-align: middle;
+      }
+
+      & > thead [data-tool-cell]:first-child {
+        vertical-align: middle;
+      }
+    }
+
+    & pre[class*="language-"] {
+      overflow-x: auto;
+    }
+
+    & pre[class*="language-"], & code[class*="language-"] {
+      @apply font-mono;
+      font-size: inherit;
+    }
+
+    & pre[class*="language-"] > code {
+      @apply text-sm;
+      display: block;
+
+    }
+
+    & [data-editor-type=frontmatter] {
+      & table {
+        margin: 0;
+        font-size: inherit;
+        width: auto;
+        & thead, & tbody, & tfoot, & tr {
+          border: 0;
+        }
+      }
+    }
+    & li[role=checkbox] {
+      text-indent: 1.2rem;
+    }
+
+    & li[role=checkbox]::before {
+      transform: translate(6px, 6px);
+    }
+    & li[role=checkbox]::after {
+      transform: translate(6px, 6px) rotate(45deg);
+    }
+  }
+
+  .api-ref-nav > a {
+    @apply mb-3;
+    display: block;
+  }
+
+  .api-ref-nav > dl > dd > dl {
+    @apply pl-2;
+  }
+
+  .api-ref-nav dd dd {
+    @apply mb-2;
+  }
+
+  .api-ref-nav > dl > dt {
+    @apply font-medium;
+  }
+
+  .in-page-nav {
+    @apply border-l-primary border-dotted border-l-2 pl-4  text-sm sticky top-2 w-48;
+
+    p {
+      @apply mb-2;
+
+    }
+
+    li ul {
+      @apply pl-2;
+    }
+
+    li > a {
+      @apply block mb-1 text-neutral-400;
+    }
+  }
+
+  .doc-nav {
+    & a:hover {
+      @apply text-primary;
+    }
+
+    & a[data-current=true] {
+      @apply text-primary cursor-default;
+
+    }
+  }
+
+  h2#classes + table,
+  h2#functions + table,
+  h2#interfaces + table,
+  h2#type-aliases + table
+  {
+    & td:first-child, 
+    & tr:first-child {
+      width: 50%;
+    }
+  }
+
+  .feature-overview-popover {
+    & a {
+      @apply text-primary;
+
+      & svg {
+        @apply inline;
+      }
+    }
+    & p {
+      @apply mb-4;
+    }
+  }
+
+
 .pre-btn {
   display: none;
 }

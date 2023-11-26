@@ -2,6 +2,10 @@ import { rxdb } from "@/lib/mongo";
 import { NextRequest, NextResponse } from "next/server";
 import crypto from 'crypto'
 import { ObjectId } from "mongodb";
+const mark = require('markdocx')
+const {markdocx}: any = mark
+
+
 
 export async function GET(request: NextRequest, {params: {id}}: {params: {id: string}}) {
     const db = await rxdb();
@@ -10,8 +14,7 @@ export async function GET(request: NextRequest, {params: {id}}: {params: {id: st
     if (!paste) {
         return new NextResponse('NOT_FOUND', {status: 404})
     }
-    if (paste.oneTime && process.env.NODE_ENV == 'production') {
-        await pastes.deleteOne({ _id: new ObjectId(id) })
-    }
-    return new NextResponse(paste.paste, {status: 200, headers: {'Content-Type': 'text/plain'}})
+    const buffer = await markdocx(paste!.paste)
+
+    return new NextResponse(buffer, {status: 200, headers: {'Content-Type': 'application/msword', 'Content-Disposition': 'attachment'}})
 }

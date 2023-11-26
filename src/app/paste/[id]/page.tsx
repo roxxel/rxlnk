@@ -9,7 +9,10 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import React, { FC } from "react";
 import removeMarkdown from "markdown-to-text";
-
+import {md2docx} from '@adobe/helix-md2docx'
+import { downloadBlob } from "@/lib/utils";
+import { Switch } from "@/components/ui/switch";
+import DownloadPasteButton from "@/components/downloadpastebutton";
 interface IProps {
   params: { id: string };
   searchParams?: { raw: string | undefined };
@@ -21,17 +24,22 @@ export async function generateMetadata(
   const db = await rxdb();
   const pastes = await db.collection("pastes");
   const paste = await pastes.findOne({ _id: new ObjectId(params.id) });
+  
   if (paste) {
-    const cleaned = removeMarkdown((paste.paste as string))
+    const cleaned = removeMarkdown(paste.paste as string);
     return {
-      title: 'Reactive Link Paste',
-      description: (cleaned.startsWith("CODE") ? cleaned.split("\n").slice(1).join('\n') : cleaned).substring(0, 150) + '...'
-    }
+      title: "Reactive Link Paste",
+      description:
+        (cleaned.startsWith("CODE")
+          ? cleaned.split("\n").slice(1).join("\n")
+          : cleaned
+        ).substring(0, 150) + "...",
+    };
   }
   return {
-    title: 'Reactive Link',
-    description: 'Paste not found'
-  }
+    title: "Reactive Link",
+    description: "Paste not found",
+  };
 }
 
 const PastePage: FC<IProps> = async ({ params: { id }, searchParams }) => {
@@ -52,18 +60,40 @@ const PastePage: FC<IProps> = async ({ params: { id }, searchParams }) => {
       </div>
     );
   }
-
+  if (paste.oneTime && process.env.NODE_ENV == 'production') {
+    await pastes.deleteOne({ _id: new ObjectId(id) })
+  }
   return (
     <div className="min-h-screen text-[#f7f7f7] bg-black">
       <Navbar />
       <div className="flex mt-4 px-8 md:px-32 lg:px-80 justify-between items-center">
-        {paste.createdAt ? 
+        {paste.createdAt ? (
           <p className="text-gray-500 font-light">
             Posted at: {new Date(paste.createdAt).toLocaleString()}
-          </p> : <div></div>}
-        <Link href={`/paste/${id}/raw`}><Button variant='link'  className="rounded-[4px]">View raw</Button></Link>
+          </p>
+        ) : (
+          <div></div>
+        )}
+        
+        <div className="flex">
+          {!paste.oneTime && (<Link href={`/paste/${id}/raw`}>
+            <Button variant="link" className="rounded-[4px]">
+              View raw
+            </Button>
+          </Link>)}
+          {paste.oneTime && (
+            <DownloadPasteButton paste={paste.paste} />
+          )}
+        </div>
       </div>
-      <MDRenderer displayScreenshotButton={true} className="px-8 py-8 min-h-screen md:px-32 lg:px-80" markdown={paste.paste}></MDRenderer>
+      <div className="px-8 md:px-32 lg:px-80">
+        <p className="text-destructive">This paste is already deleted. You would not have another chance to view it.<br/> Please save it in order to keep data</p>
+      </div>
+      <MDRenderer
+        displayScreenshotButton={true}
+        className="px-8 py-8 min-h-screen md:px-32 lg:px-80"
+        markdown={paste.paste}
+      ></MDRenderer>
     </div>
   );
 };

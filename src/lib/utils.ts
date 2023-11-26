@@ -26,4 +26,20 @@ const downloadImage = (blob: string) => {
   fakeLink.remove();
 };
 
+export const downloadBlob = (blob: Blob, fileName: string) => {
+  const url = URL.createObjectURL(blob)
+  const fakeLink = window.document.createElement("a");
+  //@ts-ignore
+  fakeLink.style = "display:none;";
+  fakeLink.download = fileName;
+
+  fakeLink.href = url;
+
+  document.body.appendChild(fakeLink);
+  fakeLink.click();
+  document.body.removeChild(fakeLink);
+
+  fakeLink.remove();
+}
+
 export default exportAsImage;

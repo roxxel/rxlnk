@@ -3,6 +3,11 @@ import MDRenderer from "@/components/mdrenderer";
 import Navbar from "@/components/navbar";
 import { Button } from "@/components/ui/button";
 import Loading from "@/components/ui/loading";
+import { MDXEditor, MDXEditorMethods } from '@mdxeditor/editor/MDXEditor'
+import { headingsPlugin } from '@mdxeditor/editor/plugins/headings'
+import { listsPlugin } from '@mdxeditor/editor/plugins/lists'
+import { quotePlugin } from '@mdxeditor/editor/plugins/quote'
+import { thematicBreakPlugin } from '@mdxeditor/editor/plugins/thematic-break'
 import hljs from "highlight.js";
 import {
   Popover,
@@ -14,6 +19,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import React, { FC, useState } from "react";
 import Link from "next/link";
+import InitializedMDXEditor from "@/components/initializedmdxeditor";
+import { BoldItalicUnderlineToggles, UndoRedo, toolbarPlugin } from "@mdxeditor/editor";
+import { FullEditor } from "@/components/fulleditor";
 
 interface IProps {}
 interface PastingResult {
@@ -23,15 +31,20 @@ interface PastingResult {
 }
 
 const NewPaste: FC<IProps> = (props) => {
-  const [paste, setPaste] = useState("");
+  const [paste, setPaste] = useState("# Hey there!");
   const [preview, setPreview] = useState(false);
   const [isPasting, setIsPasting] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
+  const [isOneTime, setIsOneTime] = useState(false);
+
   const [pastingResult, setPastingResult] = useState<PastingResult | undefined>(
     undefined
   );
+  const [richEditor, setRichEditor] = useState(false)
   const router = useRouter();
-  const togglePreviewMode = () => setPreview((prev) => !prev);
+  const togglePreviewMode = () => {
+    setPreview((prev) => !prev);
+  }
   const publish = async () => {
     setPastingResult(undefined)
     try {
@@ -41,6 +54,7 @@ const NewPaste: FC<IProps> = (props) => {
         body: JSON.stringify({
           paste: paste,
           isPrivate: !isPublic,
+          oneTime: isOneTime
         }),
       });
       if (resp.status !== 200) {
@@ -83,10 +97,26 @@ const NewPaste: FC<IProps> = (props) => {
         
     }
   }
+  const ref = React.useRef<MDXEditorMethods>(null)
+
 
   return (
-    <div className="bg-black overflow-hidden max-h-screen">
+    <div className="bg-black overflow-hidden">
+      
       <Navbar />
+      <div className="my-4 px-8">
+        {/* <div className="flex items-center border max-w-fit px-2 py-1 rounded-md">
+          Plain
+          <Switch checked={richEditor} onCheckedChange={(c) => {
+            if (!c) {
+              setPaste(ref?.current?.getMarkdown() ?? '')
+            }
+            setRichEditor(c)
+          }} className="mx-2" placeholder="WYSIWYG?" />
+          WYSIWYG
+        </div> */}
+      </div>
+
       <div className="fixed right-4  z-[100] bottom-4 flex">
         <Button onClick={togglePreviewMode} variant={"secondary"} className="">
           {!preview ? "Preview" : "Continue editing"}
@@ -106,6 +136,14 @@ const NewPaste: FC<IProps> = (props) => {
                   disabled={isPasting}
                   checked={isPublic}
                   onCheckedChange={(e) => setIsPublic(e)}
+                />
+              </div>
+              <div className="flex justify-between">
+                <p>Burn after view</p>
+                <Switch
+                  disabled={isPasting}
+                  checked={isOneTime}
+                  onCheckedChange={(e) => setIsOneTime(e)}
                 />
               </div>
               {pastingResult && (
@@ -144,7 +182,7 @@ const NewPaste: FC<IProps> = (props) => {
           </PopoverContent>
         </Popover>
       </div>
-      <div className="flex max-h-[90vh] overflow-hidden bg-black">
+      {!richEditor && <div className="flex max-h-[90vh] overflow-hidden bg-black">
         <div
           className={`${
             preview ? "w-0" : "w-1/2"
@@ -179,7 +217,10 @@ export default async function Home() {
             className="px-4 overflow-auto max-h-[80vh] pb-12 pt-8"
           />
         </div>
-      </div>
+      </div>}
+      {richEditor && (
+          <FullEditor editorRef={ref} onChange={(e) => ''} markdown={paste}  />
+      )}
     </div>
   );
 };
